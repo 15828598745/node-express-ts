@@ -1,0 +1,12 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
+  "rules": {
+    "trailing-comma": [false],
+    "forin": false, //使用for in语句时，强制进行hasOwnProperty检查
+    "no-var-keyword": true, // 不允许使用var
+    "interface-name": [true, "always-prefix"] // interface必须以I开头
+  },
+  "rulesDirectory": []
+}
