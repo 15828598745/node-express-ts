@@ -1,5 +1,6 @@
-import { Sequelize } from 'sequelize-typescript'
-import { mysql } from '../config/mysql'
+import { Sequelize } from 'sequelize-typescript';
+import { appConf } from '../config/appConf';
+
 export const initMysql = () => {
-  new Sequelize(mysql);
+  const sequelize = new Sequelize(Object.assign({ modelPaths: [`${__dirname}/models`] }, appConf.mysql));
 }

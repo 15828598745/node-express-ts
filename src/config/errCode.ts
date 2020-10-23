@@ -3,4 +3,6 @@ export enum EErrCode {
   "UnKnown" = 1,
   "NoLogin" = 2,
   "LoginExpire" = 3,
+  "NoUserName" = 4,
+  "PwdError" = 5,
 }

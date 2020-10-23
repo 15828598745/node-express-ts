@@ -1,14 +1,16 @@
 import { Table, Column, Model, DataType } from "sequelize-typescript"
 
 @Table({
-  tableName: "adminUser"
+  tableName: "adminUser",
+  timestamps: false,
+  freezeTableName: true
 })
-export class AdminUser extends Model<AdminUser> {
+export default class TAdminUser extends Model<TAdminUser> {
   @Column({
     primaryKey: true,
     autoIncrement: true,
   })
-  id: number
+  adminUserId: number
 
   @Column({
     type: DataType.CHAR(16),
@@ -24,3 +26,4 @@ export class AdminUser extends Model<AdminUser> {
   })
   pwd: string
 }
+

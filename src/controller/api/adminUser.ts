@@ -2,6 +2,7 @@ import * as core from "express-serve-static-core";
 import { logger } from "../../utils/logger"
 import { EErrCode } from "../../config/errCode";
 import { getReqParams } from "../../utils/common";
+import TAdminUser from "../../datebase/models/adminUser";
 const pathWhiteList = ["/api/login"]
 class CAdminUser {
   public checkSession(req: core.Request, res: core.Response, next: core.NextFunction) {
@@ -9,7 +10,6 @@ class CAdminUser {
       next();
       return
     }
-    logger.info(req.session.userName)
     // 未登录
     if (!req.session || !req.session.userName) {
       res.json({ code: EErrCode.NoLogin, msg: "没有登录" });
@@ -17,14 +17,25 @@ class CAdminUser {
     }
     next();
   }
-  public login(req: core.Request, res: core.Response) {
-    const data = getReqParams(req);
+  public async login(req: core.Request, res: core.Response) {
+    const { userName, pwd } = getReqParams(req);
+    const ret = await TAdminUser.findOne({
+      where: { name: userName }
+    });
+    if (!ret) {
+      res.json({ code: EErrCode.NoUserName, msg: `没有${userName}用户!` });
+      return;
+    }
+    if (ret.pwd !== pwd) {
+      res.json({ code: EErrCode.PwdError, msg: "密码错误" });
+      return;
+    }
     req.session.regenerate((err) => {
       if (err) {
         return res.json({ code: EErrCode.UnKnown, msg: '登录失败' });
       }
-      req.session.userName = data.userName;
-      res.json({ code: EErrCode.OK, msg: { userName: data.userName } });
+      req.session.userName = userName;
+      res.json({ code: EErrCode.OK, msg: "登录成功" });
     });
   }
   public loginOut(req: core.Request, res: core.Response) {
@@ -36,15 +47,25 @@ class CAdminUser {
       res.json({ code: EErrCode.OK, msg: '退出登录' });
     });
   }
-  public test(req: core.Request, res: core.Response) {
-    res.json({ code: EErrCode.OK, msg: '测试' });
-  }
-  public getUserInfo(req: core.Request, res: core.Response) {
+  public async getUserInfo(req: core.Request, res: core.Response) {
+    // 未登录
+    if (!req.session || !req.session.userName) {
+      res.json({ code: EErrCode.NoLogin, msg: "没有登录" });
+      return;
+    }
+    const userName = req.session.userName;
+    const ret = await TAdminUser.findOne({
+      where: { name: userName }
+    });
+    if(!ret) {
+      res.json({ code: EErrCode.NoUserName, msg: `没有${userName}用户!` });
+      return;
+    }
     const temp = {
-      userName: "admin",
+      userName: ret.name,
       roles: ["admin"]
     }
-    res.json({code: EErrCode.OK,msg: temp})
+    res.json({ code: EErrCode.OK, msg: temp })
   }
 }
 

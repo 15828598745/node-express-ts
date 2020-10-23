@@ -43,9 +43,9 @@ app.use("/public",express.static(appConf.publicPath));
 app.use(cookie())
 // 初始化路由
 const r = new CRoute(app);
-//初始化sql
-//initMysql()
-
+// 初始化sql
+initMysql()
+logger.info(process.env.NODE_ENV)
 app.listen(appConf.port, () => {
   // tslint:disable-next-line:no-console
   console.log("server started at http://localhost:" + appConf.port);

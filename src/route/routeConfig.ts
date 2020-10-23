@@ -16,10 +16,6 @@ export const routeConfig: IRouteConfig = {
     "/getUserInfo": {
       "type": ERequireType.post,
       "handle": adminUser.getUserInfo
-    },
-    "/test": {
-      "type": ERequireType.post,
-      "handle": adminUser.test
     }
   }
 }
