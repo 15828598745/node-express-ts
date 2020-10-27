@@ -11,7 +11,7 @@ export enum ERequireType {
 }
 
 export interface IRouteHandle {
-  handle: core.RequestHandler,
+  handle: core.RequestHandler | core.RequestHandler[],
   type: ERequireType
 }
 export interface IRouteConfig {
